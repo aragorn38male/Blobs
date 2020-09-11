@@ -1,0 +1,39 @@
+from blob import Blob
+
+width=240
+height=135
+
+blobs = [0]*4
+for i in range(len(blobs)):
+    blobs[i]=Blob(random(width),random(height))
+
+def setup():
+    size(width, height)
+    colorMode(HSB)
+    global img
+    img = createImage(width, height, ARGB)
+    
+def draw():
+    loadPixels()
+    
+
+    for x in range(width):
+        for y in range(height):
+            index = int(x + y * width)
+            sig=0
+            for b in blobs:
+                d = dist (x, y, b.pos.x, b.pos.y)
+                sig+= 100 * b.r / (0.1 +d)
+            
+            img.pixels[index] = color(constrain(sig,sig, sig) , 255,255)
+            
+    
+    img.updatePixels()
+    
+    image(img, 0, 0)
+    
+    for b in blobs:
+        b.update()
+        
+    #img.save("IMG{}".format(b.n))
+    b.n+=1
